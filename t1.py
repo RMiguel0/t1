@@ -83,6 +83,16 @@ def bintodec(input):
         i += 1
     return dec
 
+def octtodec(input):
+    numstr = str(input)[::-1]
+    i = 0
+    dec = 0
+    for c in numstr:
+        c = int(c)
+        dec += c*(8**i)
+        i += 1
+    return dec
+
 print(hexatodec('80D'))
 
 print('alop')
