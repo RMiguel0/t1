@@ -152,7 +152,6 @@ def bintodec(input):
         c = int(c)
         dec += c*(2**i)
         i += 1
-    print(dec)
     return dec
 
 def dectobin(numhack):
@@ -202,13 +201,13 @@ def dectooct(numhack):
 
 def ganar():
     if base == 0:
-        print('decifra el siguiente numero: ', dectobin(hack))
+        print('decifra el siguiente numero: ', ''.join(map(str,dectobin(hack))))
     elif base == 1:
-        print('decifra el siguiente numero: ', dectooct(hack))
+        print('decifra el siguiente numero: ', ''.join(map(str,dectooct(hack))))
     elif base == 2:
-        print('decifra el siguiente numero: ', dectohexa(hack))
+        print('decifra el siguiente numero: ', ''.join(map(str,dectohexa(hack))))
 
-    respuesta = input('-->')
+    respuesta = int(input('-->'))
     
     if respuesta == hack:
         print('YOU WIN MF')
@@ -221,6 +220,7 @@ def verificar(posiciones):
     if matriz[posiciones[0]][posiciones[1]] == '[ ]':
         return True
     elif matriz[posiciones[0]][posiciones[1]] == '[!]':
+        print('Atrapao')
         return False
     elif matriz[posiciones[0]][posiciones[1]] == '[*]':
         ganar()
@@ -236,7 +236,6 @@ def movement(direccion, espacios):
                 if verificar(posactual):
                     spaces -= 1
                 else:
-                    print('Atrapao')
                     return 0
             matriz[posactual[0]][posactual[1]] = '[S]'
             return 1
@@ -253,7 +252,6 @@ def movement(direccion, espacios):
                 if verificar(posactual):
                     spaces -= 1
                 else:
-                    print('Atrapao')
                     return 0
             matriz[posactual[0]][posactual[1]] = '[S]'
             return 1
@@ -270,7 +268,6 @@ def movement(direccion, espacios):
                 if verificar(posactual):
                     spaces -= 1
                 else:
-                    print('Atrapao')
                     return 0
             matriz[posactual[0]][posactual[1]] = '[S]'
             return 1
@@ -316,14 +313,14 @@ while flag:
     
     elif base == 1:
         espacios = input('Escriba cuantas casillas se quiere mover en octal: ')
-        espacios = bintodec(espacios)
+        espacios = octtodec(espacios)
         flag = movement(movimiento,espacios)
         if flag:
             mostrar_tablero()
     
     elif base == 2:
         espacios = input('Escriba cuantas casillas se quiere mover en Hexadecimal: ')
-        espacios = bintodec(espacios)
+        espacios = hexatodec(espacios)
         flag = movement(movimiento,espacios)
         if flag:
             mostrar_tablero()
