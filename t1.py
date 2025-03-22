@@ -93,6 +93,68 @@ def octtodec(input):
         i += 1
     return dec
 
-print(hexatodec('80D'))
+def resto2(numero, lista=None):
+    if lista is None:
+        lista = []
+    
+    resto = numero % 2
+    lista.append(resto)
+    
+    new = numero // 2
+    
+    if new == 0:
+        return lista
+    else:
+        return resto2(new, lista)
+    
+def dectobin(numhack):
+    binnumbers = [0,1]
+    result = []
+    
+    if numhack < 2:
+        return binnumbers[numhack]
+    else:
+        result = resto2(numhack)
+    
+    i = 0
+    for num in result:
+        result[i] = binnumbers[num]
+        i += 1
+        
+    result.reverse()
+    return result
 
-print('alop')
+def dectooct(numhack):
+    octnumbers = [0,1,2,3,4,5,6,7]
+    result = []
+    
+    if numhack < 2:
+        return octnumbers[numhack]
+    else:
+        result = resto8(numhack)
+    
+    i = 0
+    for num in result:
+        result[i] = octnumbers[num]
+        i += 1
+        
+    result.reverse()
+    return result
+
+def resto8(numero, lista=None):
+    if lista is None:
+        lista = []
+    
+    resto = numero % 8
+    lista.append(resto)
+    
+    new = numero // 8
+    
+    if new == 0:
+        return lista
+    else:
+        return resto8(new, lista)
+print(dectooct(347))
+
+
+
