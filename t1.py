@@ -9,21 +9,66 @@ cuadro = '[ ]'
 matriz = np.array([[cuadro] * size for _ in range(11)])
 matriz[5][0] = '[S]'
 
-for fila in matriz:
-    print(" ".join(map(str, fila)))
+posactual = [5,0]
+
+def randcoord():
+    x = random.randrange(0,size)
+    y = random.randrange(0,11)
+    lista = [x,y]
+    return lista
+    
+def generarfin():
+    i = 1
+    x = size - 1
+    while i != 0:
+        y = randcoord()[1]
+
+        if matriz[y][x] == '[ ]':
+            matriz[y][x] = '[*]'
+            i -= 1
+        else:
+            y = randcoord()[1]
+
+generarfin()
+
+def mostrar_tablero():
+    for fila in matriz:
+        print(" ".join(map(str, fila)))
+
+
+def genguard(cant_guardias):
+    while cant_guardias != 0:
+        x = randcoord()[0]
+        y = randcoord()[1]
+
+        if matriz[y][x] == '[ ]':
+            matriz[y][x] = '[!]'
+            cant_guardias -= 1
+        else:
+            x = randcoord()[0]
+            y = randcoord()[1]
+    mostrar_tablero()
+
+guardias = int(input('Ingrese cantidad de guardias: '))
+genguard(guardias)
 
 
 def generarnumero():
     if size >= 100:
         hack = random.randint(0,500)
+        base = 2
     elif 20 <= size < 100:
         hack = random.randint(0,100)
+        base = 1
     elif size < 20:
         hack = random.randint(0,20)
-    
-    return hack
+        base = 0
+        
+    lista = [hack, base]
+    return lista
 
-hack = generarnumero()
+hack = generarnumero()[0]
+base = generarnumero()[1]
 
 print('hack =', hack)
 
@@ -41,7 +86,33 @@ def resto16(numero, lista=None):
     else:
         return resto16(new, lista)
 
-
+def resto8(numero, lista=None):
+    if lista is None:
+        lista = []
+    
+    resto = numero % 8
+    lista.append(resto)
+    
+    new = numero // 8
+    
+    if new == 0:
+        return lista
+    else:
+        return resto8(new, lista)
+    
+def resto2(numero, lista=None):
+    if lista is None:
+        lista = []
+    
+    resto = numero % 2
+    lista.append(resto)
+    
+    new = numero // 2
+    
+    if new == 0:
+        return lista
+    else:
+        return resto2(new, lista)
 
 def dectohexa(numhack):
     hexnumbers = [0,1,2,3,4,5,6,7,8,9,'A','B','C','D','E','F']
@@ -81,32 +152,9 @@ def bintodec(input):
         c = int(c)
         dec += c*(2**i)
         i += 1
+    print(dec)
     return dec
 
-def octtodec(input):
-    numstr = str(input)[::-1]
-    i = 0
-    dec = 0
-    for c in numstr:
-        c = int(c)
-        dec += c*(8**i)
-        i += 1
-    return dec
-
-def resto2(numero, lista=None):
-    if lista is None:
-        lista = []
-    
-    resto = numero % 2
-    lista.append(resto)
-    
-    new = numero // 2
-    
-    if new == 0:
-        return lista
-    else:
-        return resto2(new, lista)
-    
 def dectobin(numhack):
     binnumbers = [0,1]
     result = []
@@ -123,6 +171,16 @@ def dectobin(numhack):
         
     result.reverse()
     return result
+
+def octtodec(input):
+    numstr = str(input)[::-1]
+    i = 0
+    dec = 0
+    for c in numstr:
+        c = int(c)
+        dec += c*(8**i)
+        i += 1
+    return dec
 
 def dectooct(numhack):
     octnumbers = [0,1,2,3,4,5,6,7]
@@ -141,20 +199,131 @@ def dectooct(numhack):
     result.reverse()
     return result
 
-def resto8(numero, lista=None):
-    if lista is None:
-        lista = []
+
+def ganar():
+    if base == 0:
+        print('decifra el siguiente numero: ', dectobin(hack))
+    elif base == 1:
+        print('decifra el siguiente numero: ', dectooct(hack))
+    elif base == 2:
+        print('decifra el siguiente numero: ', dectohexa(hack))
+
+    respuesta = input('-->')
     
-    resto = numero % 8
-    lista.append(resto)
-    
-    new = numero // 8
-    
-    if new == 0:
-        return lista
+    if respuesta == hack:
+        print('YOU WIN MF')
+        return
     else:
-        return resto8(new, lista)
-print(dectooct(347))
+        print('ma wn q las palomas')
+        return
+
+def verificar(posiciones):
+    if matriz[posiciones[0]][posiciones[1]] == '[ ]':
+        return True
+    elif matriz[posiciones[0]][posiciones[1]] == '[!]':
+        return False
+    elif matriz[posiciones[0]][posiciones[1]] == '[*]':
+        ganar()
+        return False
+
+def movement(direccion, espacios):
+    if direccion == 'w':
+        spaces = espacios
+        if posactual[0] - espacios >= 0:
+            matriz[posactual[0]][posactual[1]] = '[ ]'
+            while spaces != 0:
+                posactual[0] -= 1
+                if verificar(posactual):
+                    spaces -= 1
+                else:
+                    print('Atrapao')
+                    return 0
+            matriz[posactual[0]][posactual[1]] = '[S]'
+            return 1
+        else:
+            print('Ingrese una casilla posible.')
+            return 1
+        
+    elif direccion == 's':
+        spaces = espacios
+        if posactual[0] + espacios <= 10: 
+            matriz[posactual[0]][posactual[1]] = '[ ]'
+            while spaces != 0:
+                posactual[0] += 1
+                if verificar(posactual):
+                    spaces -= 1
+                else:
+                    print('Atrapao')
+                    return 0
+            matriz[posactual[0]][posactual[1]] = '[S]'
+            return 1
+        else:
+            print('Ingrese una casilla posible.')
+            return 1
+            
+    elif direccion == 'a':
+        spaces = espacios
+        if posactual[1] - espacios >= 0: 
+            matriz[posactual[0]][posactual[1]] = '[ ]'
+            while spaces != 0:
+                posactual[1] -= 1
+                if verificar(posactual):
+                    spaces -= 1
+                else:
+                    print('Atrapao')
+                    return 0
+            matriz[posactual[0]][posactual[1]] = '[S]'
+            return 1
+        else:
+            print('Ingrese una casilla posible.')
+            return 1
+        
+    elif direccion == 'd':
+        spaces = espacios
+        if posactual[1] + espacios <= size-1:
+            matriz[posactual[0]][posactual[1]] = '[ ]'
+            while spaces != 0:
+                posactual[1] += 1
+                if verificar(posactual):
+                    spaces -= 1
+                else:
+                    print('Atrapaooo')
+                    return 0
+            matriz[posactual[0]][posactual[1]] = '[S]'
+            return 1
+        else:
+            print('Ingrese una casilla posible.')
+            return 1
+
+    
+flag = 1
 
 
-
+while flag:
+    movimiento = input('''Ingresa una accion:
+                       w: Moverse hacia arriba.
+                       s: Moverse hacia abajo.
+                       d: Moverse hacia la derecha.
+                       a: Moverse hacia la izquierda.
+                       -1: salir.
+                       ''')
+    if base == 0:
+        espacios = input('Escriba cuantas casillas se quiere mover en binario: ')
+        espacios = bintodec(espacios)
+        flag = movement(movimiento,espacios)
+        if flag:
+            mostrar_tablero()
+    
+    elif base == 1:
+        espacios = input('Escriba cuantas casillas se quiere mover en octal: ')
+        espacios = bintodec(espacios)
+        flag = movement(movimiento,espacios)
+        if flag:
+            mostrar_tablero()
+    
+    elif base == 2:
+        espacios = input('Escriba cuantas casillas se quiere mover en Hexadecimal: ')
+        espacios = bintodec(espacios)
+        flag = movement(movimiento,espacios)
+        if flag:
+            mostrar_tablero()
