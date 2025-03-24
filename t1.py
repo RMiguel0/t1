@@ -35,7 +35,6 @@ def mostrar_tablero():
     for fila in matriz:
         print(" ".join(map(str, fila)))
 
-
 def genguard(cant_guardias):
     while cant_guardias != 0:
         x = randcoord()[0]
@@ -52,12 +51,11 @@ def genguard(cant_guardias):
 guardias = int(input('Ingrese cantidad de guardias: '))
 genguard(guardias)
 
-
 def generarnumero():
-    if size >= 100:
+    if size > 100:
         hack = random.randint(0,500)
         base = 2
-    elif 20 <= size < 100:
+    elif 20 <= size <= 100:
         hack = random.randint(0,100)
         base = 1
     elif size < 20:
@@ -69,8 +67,6 @@ def generarnumero():
 
 hack = generarnumero()[0]
 base = generarnumero()[1]
-
-print('hack =', hack)
 
 def resto16(numero, lista=None):
     if lista is None:
@@ -136,6 +132,11 @@ def hexatodec(hexadecimal):
     hexnumbers = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'A', 'B', 'C', 'D', 'E', 'F']
     total = 0
     
+    for numero in hexadecimal:
+        if numero not in hexnumbers:
+            print('Ingresa un numero Hexadecimal correcto')
+            return
+    
     i = 0
     for number in revert:
         number = hexnumbers.index(number)
@@ -145,6 +146,13 @@ def hexatodec(hexadecimal):
     return total
     
 def bintodec(input):
+    binumbers= ['0','1']
+    
+    for numero in input:
+        if numero not in binumbers:
+            print('Ingresa un numero Binario correcto')
+            return
+    
     numstr = str(input)[::-1]
     i = 0
     dec = 0
@@ -172,6 +180,14 @@ def dectobin(numhack):
     return result
 
 def octtodec(input):
+    octalnumbers = ['0','1','2','3','4','5','6','7']
+    
+    for numero in input:
+        if numero not in octalnumbers:
+            print('Ingresa un numero Octal correcto')
+            return
+    
+    
     numstr = str(input)[::-1]
     i = 0
     dec = 0
@@ -198,7 +214,6 @@ def dectooct(numhack):
     result.reverse()
     return result
 
-
 def ganar():
     if base == 0:
         print('decifra el siguiente numero: ', ''.join(map(str,dectobin(hack))))
@@ -213,7 +228,7 @@ def ganar():
         print('YOU WIN MF')
         return
     else:
-        print('ma wn q las palomas')
+        print('Aber estudiao')
         return
 
 def verificar(posiciones):
@@ -284,19 +299,18 @@ def movement(direccion, espacios):
                 if verificar(posactual):
                     spaces -= 1
                 else:
-                    print('Atrapaooo')
                     return 0
             matriz[posactual[0]][posactual[1]] = '[S]'
             return 1
         else:
             print('Ingrese una casilla posible.')
             return 1
-
-    
+ 
 flag = 1
 
-
 while flag:
+    movimientos = ['w','s','a','d','-1']
+    
     movimiento = input('''Ingresa una accion:
                        w: Moverse hacia arriba.
                        s: Moverse hacia abajo.
@@ -304,6 +318,14 @@ while flag:
                        a: Moverse hacia la izquierda.
                        -1: salir.
                        ''')
+    
+    if movimiento not in movimientos:
+        print('Ingrese un movimiento valido')
+        continue
+    
+    if movimiento == '-1':
+        break
+    
     if base == 0:
         espacios = input('Escriba cuantas casillas se quiere mover en binario: ')
         espacios = bintodec(espacios)
